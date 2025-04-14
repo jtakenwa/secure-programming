@@ -1,0 +1,145 @@
+CREATE DATABASE jaas_shop;
+
+USE jaas_shop;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_verified TINYINT(1) DEFAULT 0,
+    verification_code VARCHAR(255),
+    screen_resolution VARCHAR(20), 
+    os VARCHAR(50),
+    is_online TINYINT(1) DEFAULT 0;
+);
+
+USE jaas_shop;
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_number VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    shipping_method VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    zip_code VARCHAR(20) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL DEFAULT 'credit_card',
+    card_number VARCHAR(20),
+    card_expiry VARCHAR(5),
+    card_cvc VARCHAR(3),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
+USE jaas_shop;
+CREATE TABLE produits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    description TEXT,
+    prix DECIMAL(10,2) NOT NULL,
+    quantite_stock INT NOT NULL,
+    image_url VARCHAR(255),
+    categorie VARCHAR(100),
+    marque VARCHAR(100),
+);
+
+CREATE TABLE password_resets (
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires INT(11) NOT NULL,
+    PRIMARY KEY (email)
+);
+
+CREATE TABLE coupons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    discount_percentage FLOAT NOT NULL,
+    expiry_date DATE,
+    used INT DEFAULT 0
+);
+
+
+USE jaas_shop;
+CREATE TABLE order_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    discount DECIMAL(5, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES produits(id)
+);
+
+
+CREATE TABLE cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES produits(id),
+    UNIQUE KEY (user_id, product_id)
+);
+
+
+
+
+INSERT INTO produits (nom, description, prix, quantite_stock, image_url, categorie, marque) VALUES
+('T-shirt blanc unisexe', 'T-shirt unisexe blanc classique en coton.', 15.99, 50, 'img_prod/tshirt_blanc.jpg', 'Vêtements', 'Marque A'),
+('Jeans slim pour hommes', 'Jeans slim pour hommes en denim de qualité supérieure.', 29.99, 30, 'img_prod/jeans_homme.jpg', 'Vêtements', 'Marque B'),
+('Robe d été fleurie', 'Robe d été légère et fleurie, parfaite pour les journées ensoleillées.', 24.99, 40, 'img_prod/robe_fleurie.jpg', 'Vêtements', 'Marque C'),
+('Sneakers noires unisexes', 'Sneakers unisexes noires avec semelle en caoutchouc.', 49.99, 20, 'img_prod/sneakers_noires.jpg', 'Chaussures', 'Marque D'),
+('Sac à dos urbain', 'Sac à dos urbain polyvalent avec compartiment pour ordinateur portable.', 39.99, 35, 'img_prod/sac_a_dos.jpg', 'Accessoires', 'Marque E'),
+('Smartphone Android 6.5 pouces', 'Smartphone Android avec écran HD de 6.5 pouces et caméra haute résolution.', 199.99, 15, 'img_prod/smartphone_android.jpg', 'Électronique', 'Marque F'),
+('Tablette tactile 10 pouces', 'Tablette tactile Android avec écran IPS de 10 pouces et processeur quad-core.', 149.99, 25, 'img_prod/tablette_tactile.jpg', 'Électronique', 'Marque G'),
+('Enceinte Bluetooth portable', 'Enceinte Bluetooth portable avec batterie longue durée et son de haute qualité.', 79.99, 30, 'img_prod/enceinte_bluetooth.jpg', 'Électronique', 'Marque H'),
+('Montre-bracelet analogique', 'Montre-bracelet analogique classique avec bracelet en cuir et mouvement à quartz.', 59.99, 20, 'img_prod/montre_analogique.jpg', 'Accessoires', 'Marque I'),
+('Lunettes de soleil aviateur', 'Lunettes de soleil aviateur classiques avec monture métallique et verres polarisés.', 29.99, 35, 'img_prod/lunettes_soleil.jpg', 'Accessoires', 'Marque J'),
+('Parfum pour hommes', 'Parfum pour hommes avec des notes boisées et épicées.', 49.99, 40, 'img_prod/parfum_homme.jpg', 'Parfums', 'Marque K'),
+('Lotion hydratante pour le corps', 'Lotion hydratante pour le corps enrichie en vitamines et en extraits de plantes.', 14.99, 50, 'img_prod/lotion_corps.jpg', 'Soins de la peau', 'Marque L'),
+('Shampoing réparateur', 'Shampoing réparateur pour cheveux abîmés, enrichi en kératine et en huiles essentielles.', 12.99, 60, 'img_prod/shampoing_reparateur.jpg', 'Soins capillaires', 'Marque M'),
+('Savon à la lavande', 'Savon artisanal à la lavande pour une peau propre et rafraîchie.', 8.99, 70, 'img_prod/savon_lavande.jpg', 'Soins de la peau', 'Marque N'),
+('Jeu de société stratégique', 'Jeu de société stratégique pour toute la famille.', 24.99, 25, 'img_prod/jeu_strategique.jpg', 'Jeux et jouets', 'Marque O'),
+('Peluche douce pour enfants', 'Peluche douce pour enfants en forme de panda, idéale pour les câlins.', 19.99, 30, 'img_prod/peluche_panda.jpg', 'Jeux et jouets', 'Marque P'),
+('Cahier ligné à couverture rigide', 'Cahier ligné à couverture rigide avec reliure spirale.', 6.99, 80, 'img_prod/cahier_ligne.jpg', 'Fournitures de bureau', 'Marque Q'),
+('Stylos à encre gel colorés', 'Stylos à encre gel colorés parfaits pour l écriture et le dessin.', 3.99, 100, 'img_prod/stylos_gel.jpg', 'Fournitures de bureau', 'Marque R'),
+('Porte-clés en cuir', 'Porte-clés en cuir avec fermoir robuste.', 9.99, 60, 'img_prod/porte_cles_cuir.jpg', 'Accessoires', 'Marque S'),
+('Boucles d oreilles en argent', 'Boucles d oreilles élégantes en argent sterling avec zircons.', 29.99, 40, 'img_prod/boucles_argent.jpg', 'Accessoires', 'Marque T');
+
+
+INSERT INTO produits (nom, description, prix, quantite_stock, image_url, categorie, marque) VALUES
+INSERT INTO produits (nom, description, prix, quantite_stock, image_url, categorie, marque) VALUES
+('Baseball cap', 'Casquette de baseball réglable avec logo brodé', 19.99, 50, 'img_prod/casquette_baseball.jpg', 'Vêtements', 'Marque U'),
+('Smartwatch', 'Montre connectée avec suivi de la condition physique et notifications intelligentes', 129.99, 20, 'img_prod/montre_connectee.jpg', 'Électronique', 'Marque V'),
+('Wireless headphones', 'Écouteurs sans fil avec suppression du bruit et autonomie prolongée', 99.99, 30, 'img_prod/ecouteurs_sans_fil.jpg', 'Électronique', 'Marque W'),
+('Running shoes', 'Chaussures de course légères et respirantes pour hommes et femmes', 79.99, 40, 'img_prod/chaussures_course.jpg', 'Chaussures', 'Marque X'),
+('Yoga pants', 'Pantalon de yoga extensible et confortable pour femmes', 39.99, 30, 'img_prod/pantalon_yoga.jpg', 'Vêtements', 'Marque Y'),
+('Checked shirt', 'Chemise à carreaux en flanelle pour hommes', 49.99, 40, 'img_prod/chemise_carreaux.jpg', 'Vêtements', 'Marque Z'),
+('Scented candle', 'Bougie parfumée aux senteurs naturelles et durée de combustion prolongée', 19.99, 50, 'img_prod/bougie_parfumee.jpg', 'Maison', 'Marque A1'),
+('Personalized Coffee Mug', 'Tasse à café personnalisée avec nom ou message', 14.99, 60, 'img_prod/tasse_personnalisee.jpg', 'Maison', 'Marque B1'),
+('Decorative cushion', 'Coussin décoratif en velours avec motif géométrique', 29.99, 30, 'img_prod/coussin_decoratif.jpg', 'Maison', 'Marque C1'),
+('Indoor plant', 'Plante d intérieur purificatrice d air dans un pot décoratif', 19.99, 40, 'img_prod/plante_interieur.jpg', 'Maison', 'Marque D1'),
+('LED desk lamp', 'Lampe de bureau LED réglable avec intensité variable', 39.99, 30, 'img_prod/lampe_bureau.jpg', 'Maison', 'Marque E1'),
+('Yoga mat', 'Tapis de yoga antidérapant avec rembourrage confortable', 29.99, 40, 'img_prod/tapis_yoga.jpg', 'Sports', 'Marque F1'),
+('Soccer ball', 'Ballon de football de taille réglementaire pour les matchs et l entraînement', 19.99, 50, 'img_prod/ballon_football.jpg', 'Sports', 'Marque G1'),
+('Boxing gloves', 'Gants de boxe rembourrés pour l entraînement et la compétition', 39.99, 30, 'img_prod/gants_boxe.jpg', 'Sports', 'Marque H1'),
+('Tennis rackets', 'Raquettes de tennis légères et résistantes pour joueurs débutants et intermédiaires', 79.99, 20, 'img_prod/raquettes_tennis.jpg', 'Sports', 'Marque I1'),
+('Sleeping bag', 'Sac de couchage chaud et confortable pour le camping et la randonnée', 59.99, 30, 'img_prod/sac_couchage.jpg', 'Sports', 'Marque J1'),
+('Reusable water bottle', 'Bouteille d eau réutilisable en acier inoxydable avec isolation sous vide', 24.99, 40, 'img_prod/bouteille_eau.jpg', 'Sports', 'Marque K1'),
+('Swimming goggles', 'Lunettes de natation antibuée avec protection UV', 19.99, 50, 'img_prod/lunettes_natation.jpg', 'Sports', 'Marque L1'),
+('Cycling helmet', 'Casque de vélo léger et confortable avec protection contre les chocs', 49.99, 30, 'img_prod/casque_velo.jpg', 'Sports', 'Marque M1'),
+('Swim shorts', 'Short de bain pour hommes avec séchage rapide et poche latérale', 29.99, 40, 'img_prod/short_bain.jpg', 'Vêtements', 'Marque N1'),
+('Eye makeup', 'Maquillage pour les yeux avec palette de couleurs et pinceaux', 29.99, 30, 'img_prod/maquillage_yeux.jpg', 'Beauté', 'Marque O1');
+
+
+
+USE jaas_shop;
+ALTER TABLE users
+ADD cart TEXT;
+

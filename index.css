@@ -1,0 +1,46 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .navbar {
+    background-color: #f8f9fa;
+  }
+  
+  .navbar-brand {
+    font-weight: bold;
+  }
+  
+  .navbar-nav .nav-link {
+    color: #333;
+  }
+  
+  /* Styles spécifiques à la page d'accueil */
+  h2 {
+    color: #333;
+  }
+  
+  /* Styles pour le formulaire de recherche */
+  .form-inline {
+    margin-right: 20px;
+  }
+  
+  .form-control {
+    width: 300px;
+  }
+  
+  /* Styles pour le pied de page */
+  footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 20px 0;
+  }
+  
